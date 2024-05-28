@@ -53,7 +53,7 @@ const rows = [
 export default function BookList() {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+      <Table sx={{ minWidth: 650 }} size="small" aria-label="booke table">
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>
