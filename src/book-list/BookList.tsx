@@ -6,80 +6,52 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
-function createData(
-  id: number,
-  isbn: number,
-  title: string,
-  author: string,
-  publisher: string,
-  publishYear: number,
-  availableCopies: number,
-) {
-  return { id, isbn, title, author, publisher, publishYear, availableCopies };
-}
-
-const rows = [
-  createData(
-    1,
-    9788382656824,
-    'Harry Potter i Kamień Filozoficzny',
-    'J. K. Rowling',
-    'Media Rodzina',
-    2000,
-    45,
-  ),
-  createData(2, 9788383610672, 'Bastion', 'S. King', 'Albatros', 1990, 66),
-  createData(
-    3,
-    9788381881548,
-    'Problem trzech ciał',
-    'C. Liu',
-    'Rebis',
-    2014,
-    30,
-  ),
-  createData(
-    4,
-    9788383611433,
-    'Teoria Bobra',
-    'A. Tuomainen',
-    'Albatros',
-    2024,
-    10,
-  ),
-];
+import { useApi } from '../api/ApiProvider';
+import { useEffect, useState } from 'react';
+import { BookDto } from '../api/dto/book.dto';
+import { useTranslation } from 'react-i18next';
 
 export default function BookList() {
+  const apiClient = useApi();
+  const { t } = useTranslation();
+
+  const [books, setBooks] = useState<BookDto[]>([]);
+
+  useEffect(() => {
+    apiClient.getAllBooks().then((response) => {
+      setBooks(response.data);
+    });
+  }, [apiClient]);
+
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="booke table">
+      <Table sx={{ minWidth: 650 }} size="small" aria-label="book table">
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell align="right">ISBN</TableCell>
-            <TableCell align="right">Title</TableCell>
-            <TableCell align="right">Author</TableCell>
-            <TableCell align="right">Publisher</TableCell>
-            <TableCell align="right">Publish Year</TableCell>
-            <TableCell align="right">Available Copies</TableCell>
+            <TableCell align="right">{t('title')}</TableCell>
+            <TableCell align="right">{t('author')}</TableCell>
+            <TableCell align="right">{t('publisher')}</TableCell>
+            <TableCell align="right">{t('publishYear')}</TableCell>
+            <TableCell align="right">{t('availableCopies')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {books?.map((book) => (
             <TableRow
-              key={row.id}
+              key={book.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.id}
+                {book.id}
               </TableCell>
-              <TableCell align="right">{row.isbn}</TableCell>
-              <TableCell align="right">{row.title}</TableCell>
-              <TableCell align="right">{row.author}</TableCell>
-              <TableCell align="right">{row.publisher}</TableCell>
-              <TableCell align="right">{row.publishYear}</TableCell>
-              <TableCell align="right">{row.availableCopies}</TableCell>
+              <TableCell align="right">{book.isbn}</TableCell>
+              <TableCell align="right">{book.title}</TableCell>
+              <TableCell align="right">{book.author}</TableCell>
+              <TableCell align="right">{book.publisher}</TableCell>
+              <TableCell align="right">{book.publishYear}</TableCell>
+              <TableCell align="right">{book.availableCopies}</TableCell>
             </TableRow>
           ))}
         </TableBody>
