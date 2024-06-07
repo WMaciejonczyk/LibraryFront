@@ -1,6 +1,7 @@
 import {
   AppBar,
   Box,
+  Button,
   IconButton,
   Menu,
   MenuItem,
@@ -10,8 +11,14 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import { AccountCircle } from '@mui/icons-material';
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import i18n from '../i18n';
+
 function MenuAppBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const { t } = useTranslation();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -20,6 +27,8 @@ function MenuAppBar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const navigate = useNavigate();
 
   return (
     <AppBar position="static">
@@ -34,8 +43,22 @@ function MenuAppBar() {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Library
+          {t('library')}
         </Typography>
+        <Button
+          variant="contained"
+          sx={{ m: 1 }}
+          onClick={() => i18n.changeLanguage('en')}
+        >
+          English (en)
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ m: 1 }}
+          onClick={() => i18n.changeLanguage('pl')}
+        >
+          Polski (pl)
+        </Button>
         <Box>
           <IconButton
             size="large"
@@ -57,8 +80,11 @@ function MenuAppBar() {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
+            <MenuItem onClick={handleClose}>{t('profile')}</MenuItem>
+            <MenuItem onClick={handleClose}>{t('account')}</MenuItem>
+            <MenuItem onClick={() => navigate('/login')}>
+              {t('logOut')}
+            </MenuItem>
           </Menu>
         </Box>
       </Toolbar>

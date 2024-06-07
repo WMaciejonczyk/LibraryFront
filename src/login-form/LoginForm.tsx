@@ -5,20 +5,30 @@ import LoginIcon from '@mui/icons-material/Login';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import { useApi } from '../api/ApiProvider';
+import { useTranslation } from 'react-i18next';
 
 function LoginForm() {
   const navigate = useNavigate();
+  const apiClient = useApi();
+  const { t } = useTranslation();
 
   const onSubmit = useCallback(
-    (values: { username: string; password: string }, formik: any) => {
-      navigate('/home');
+    (values: { login: string; password: string }, formik: any) => {
+      apiClient.login(values).then((response) => {
+        if (response.success) {
+          navigate('/homepage');
+        } else {
+          formik.setFieldError('login', t('invalidLogin'));
+        }
+      });
     },
-    [navigate],
+    [t, apiClient, navigate],
   );
   const validationSchema = useMemo(
     () =>
       yup.object().shape({
-        username: yup.string().required('Username is required'),
+        login: yup.string().required('Username is required'),
         password: yup
           .string()
           .required('Password is required')
@@ -28,7 +38,7 @@ function LoginForm() {
   );
   return (
     <Formik
-      initialValues={{ username: '', password: '' }}
+      initialValues={{ login: '', password: '' }}
       onSubmit={onSubmit}
       validationSchema={validationSchema}
       validateOnChange
@@ -42,18 +52,18 @@ function LoginForm() {
           noValidate
         >
           <TextField
-            id="username"
-            label="Username"
+            id="login"
+            label={t('username')}
             variant="standard"
-            name="username"
+            name="login"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.username && !!formik.errors.username}
-            helperText={formik.touched.username && formik.errors.username}
+            error={formik.touched.login && !!formik.errors.login}
+            helperText={formik.touched.login && formik.errors.login}
           />
           <TextField
             id="password"
-            label="Password"
+            label={t('password')}
             variant="standard"
             type="password"
             name="password"
@@ -69,7 +79,7 @@ function LoginForm() {
             form="signForm"
             disabled={!(formik.isValid && formik.dirty)}
           >
-            Sign in
+            {t('signIn')}
           </Button>
         </form>
       )}
