@@ -5,3 +5,11 @@ export class RequestUserDto {
   email!: string;
   fullName!: string;
 }
+
+export class UserUpdateDto {
+  id!: number;
+  username: string | undefined;
+  role: string | undefined;
+  email: string | undefined;
+  fullName: string | undefined;
+}

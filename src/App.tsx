@@ -18,6 +18,9 @@ import ReviewList from './review-list/ReviewList';
 import ReviewAdd from './review-add/ReviewAdd';
 import BookDetailsAdd from './book-details-add/BookDetailsAdd';
 import BookDetailsList from './book-details-list/BookDetailsList';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import BookUpdate from './book-update/BookUpdate';
+import UserUpdate from './user-update/UserUpdate';
 
 function App() {
   return (
@@ -32,11 +35,13 @@ function App() {
               <Route path="bookadd" element={<BookAdd />} />
               <Route path="bookdetailslist" element={<BookDetailsList />} />
               <Route path="bookdetailsadd" element={<BookDetailsAdd />} />
+              <Route path="bookupdate" element={<BookUpdate />} />
               <Route path="bookdelete" element={<BookDelete />} />
               <Route path="rentallist" element={<RentalList />} />
               <Route path="rentaladd" element={<RentalAdd />} />
               <Route path="rentalend" element={<RentalEnd />} />
               <Route path="useradd" element={<UserAdd />} />
+              <Route path="userupdate" element={<UserUpdate />} />
               <Route path="userdelete" element={<UserDelete />} />
               <Route path="reviewlist" element={<ReviewList />} />
               <Route path="reviewadd" element={<ReviewAdd />} />

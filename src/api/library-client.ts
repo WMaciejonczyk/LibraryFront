@@ -1,8 +1,12 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { LoginDto, LoginResponseDto } from './dto/login.dto';
-import { RequestBookDetailsDto, RequestBookDto } from './dto/book.dto';
+import {
+  BookUpdateDto,
+  RequestBookDetailsDto,
+  RequestBookDto,
+} from './dto/book.dto';
 import { RequestRentalDto } from './dto/rental.dto';
-import { RequestUserDto } from './dto/user.dto';
+import { RequestUserDto, UserUpdateDto } from './dto/user.dto';
 import { IdDto } from './dto/id.dto';
 import { RequestReviewDto } from './dto/review.dto';
 
@@ -130,6 +134,107 @@ export class LibraryClient {
     }
   }
 
+  public async getByAuthor(data: string): Promise<ClientResponse<any | null>> {
+    try {
+      const response = await this.client.get(
+        `/book/getByAuthor?author=${data}`,
+      );
+
+      return {
+        success: true,
+        data: response.data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      const axiosError = error as AxiosError<Error>;
+
+      return {
+        success: false,
+        data: null,
+        statusCode: axiosError.response?.status || 0,
+      };
+    }
+  }
+
+  public async getByTitle(data: string): Promise<ClientResponse<any | null>> {
+    try {
+      const response = await this.client.get(`/book/getByTitle?title=${data}`);
+
+      return {
+        success: true,
+        data: response.data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      const axiosError = error as AxiosError<Error>;
+
+      return {
+        success: false,
+        data: null,
+        statusCode: axiosError.response?.status || 0,
+      };
+    }
+  }
+
+  public async getByIsbn(data: string): Promise<ClientResponse<any | null>> {
+    try {
+      const response = await this.client.get(`/book/getByIsbn?isbn=${data}`);
+
+      return {
+        success: true,
+        data: response.data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      const axiosError = error as AxiosError<Error>;
+
+      return {
+        success: false,
+        data: null,
+        statusCode: axiosError.response?.status || 0,
+      };
+    }
+  }
+
+  public async updateBook(
+    data: BookUpdateDto,
+  ): Promise<ClientResponse<any | null>> {
+    try {
+      let query = `/book/update/${data.id}?`;
+
+      if (data.title) {
+        query += `title=${encodeURIComponent(data.title)}&`;
+      }
+      if (data.publisher) {
+        query += `publisher=${encodeURIComponent(data.publisher)}&`;
+      }
+      if (data.isbn) {
+        query += `isbn=${encodeURIComponent(data.isbn)}&`;
+      }
+      if (data.availableCopies !== undefined) {
+        query += `availableCopies=${encodeURIComponent(data.availableCopies)}&`;
+      }
+
+      query = query.slice(0, -1);
+
+      const response = await this.client.post(query);
+
+      return {
+        success: true,
+        data: response.data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      const axiosError = error as AxiosError<Error>;
+
+      return {
+        success: false,
+        data: null,
+        statusCode: axiosError.response?.status || 0,
+      };
+    }
+  }
+
   public async addBookDetails(
     data: RequestBookDetailsDto,
   ): Promise<ClientResponse<any | null>> {
@@ -213,6 +318,26 @@ export class LibraryClient {
     }
   }
 
+  public async getUserRentals(): Promise<ClientResponse<any | null>> {
+    try {
+      const response = await this.client.get('/rental/showHistory');
+
+      return {
+        success: true,
+        data: response.data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      const axiosError = error as AxiosError<Error>;
+
+      return {
+        success: false,
+        data: null,
+        statusCode: axiosError.response?.status || 0,
+      };
+    }
+  }
+
   public async addUser(
     data: RequestUserDto,
   ): Promise<ClientResponse<any | null>> {
@@ -238,6 +363,45 @@ export class LibraryClient {
   public async deleteUser(data: IdDto): Promise<ClientResponse<any | null>> {
     try {
       const response = await this.client.delete(`/user/delete/${data.id}`);
+
+      return {
+        success: true,
+        data: response.data,
+        statusCode: response.status,
+      };
+    } catch (error) {
+      const axiosError = error as AxiosError<Error>;
+
+      return {
+        success: false,
+        data: null,
+        statusCode: axiosError.response?.status || 0,
+      };
+    }
+  }
+
+  public async updateUser(
+    data: UserUpdateDto,
+  ): Promise<ClientResponse<any | null>> {
+    try {
+      let query = `/user/update/${data.id}?`;
+
+      if (data.username) {
+        query += `username=${encodeURIComponent(data.username)}&`;
+      }
+      if (data.role) {
+        query += `role=${encodeURIComponent(data.role)}&`;
+      }
+      if (data.email) {
+        query += `email=${encodeURIComponent(data.email)}&`;
+      }
+      if (data.fullName) {
+        query += `fullName=${encodeURIComponent(data.fullName)}&`;
+      }
+
+      query = query.slice(0, -1);
+
+      const response = await this.client.post(query);
 
       return {
         success: true,

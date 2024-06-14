@@ -1,0 +1,9 @@
+.Book-update {
+    padding: 1rem;
+    display: flex;
+    margin-top: 5%;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    align-items: center;
+}

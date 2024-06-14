@@ -1,15 +1,15 @@
 import { useApi } from '../api/ApiProvider';
+import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo } from 'react';
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { Formik } from 'formik';
 import { Button, TextField } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import './BookAdd.css';
-import { useTranslation } from 'react-i18next';
+import UpdateIcon from '@mui/icons-material/Update';
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './BookUpdate.css';
 
-export default function BookAdd() {
+export default function BookUpdate() {
   const navigate = useNavigate();
   const apiClient = useApi();
   const { t } = useTranslation();
@@ -17,20 +17,20 @@ export default function BookAdd() {
   const onSubmit = useCallback(
     (
       values: {
+        id: number;
         isbn: number;
         title: string;
-        author: string;
         publisher: string;
-        publishYear: number;
         availableCopies: number;
       },
       formik: any,
     ) => {
-      apiClient.addBook(values).then((response) => {
+      console.log(values);
+      apiClient.updateBook(values).then((response) => {
         if (response.success) {
           navigate('/homepage');
         } else {
-          formik.setFieldError('availableCopies', t('invalidParams'));
+          formik.setFieldError('parameter', t('invalidParams'));
         }
       });
     },
@@ -39,37 +39,27 @@ export default function BookAdd() {
   const validationSchema = useMemo(
     () =>
       yup.object().shape({
-        isbn: yup
+        id: yup
           .number()
           .integer()
-          .moreThan(0, t('isbnError'))
-          .required(t('isbnError')),
-        title: yup.string().required(t('titleError')),
-        author: yup.string().required(t('authorError')),
-        publisher: yup.string().required(t('publisherError')),
-        publishYear: yup
-          .number()
-          .integer()
-          .min(1970, t('publishYearIntError'))
-          .max(new Date().getFullYear())
-          .required(t('publishYearError')),
+          .moreThan(0, t('idError'))
+          .required(t('idError')),
+        isbn: yup.number().integer().moreThan(-1, t('isbnError')),
         availableCopies: yup
           .number()
           .integer()
-          .min(1, t('availableCopiesIntError'))
-          .required('availableCopiesError'),
+          .min(0, t('availableCopiesIntError')),
       }),
     [t],
   );
   return (
     <Formik
       initialValues={{
-        isbn: -1,
+        id: -1,
+        isbn: 0,
         title: '',
-        author: '',
         publisher: '',
-        publishYear: -1,
-        availableCopies: -1,
+        availableCopies: 0,
       }}
       onSubmit={onSubmit}
       validationSchema={validationSchema}
@@ -78,11 +68,21 @@ export default function BookAdd() {
     >
       {(formik: any) => (
         <form
-          className="Book-add"
-          id="bookAdd"
+          className="Book-update"
+          id="bookUpdate"
           onSubmit={formik.handleSubmit}
           noValidate
         >
+          <TextField
+            id="id"
+            label="ID"
+            variant="standard"
+            name="id"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.id && !!formik.errors.id}
+            helperText={formik.touched.id && formik.errors.id}
+          />
           <TextField
             id="isbn"
             label="ISBN"
@@ -104,16 +104,6 @@ export default function BookAdd() {
             helperText={formik.touched.title && formik.errors.title}
           />
           <TextField
-            id="author"
-            label={t('author')}
-            variant="standard"
-            name="author"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.author && !!formik.errors.author}
-            helperText={formik.touched.author && formik.errors.author}
-          />
-          <TextField
             id="publisher"
             label={t('publisher')}
             variant="standard"
@@ -122,16 +112,6 @@ export default function BookAdd() {
             onBlur={formik.handleBlur}
             error={formik.touched.publisher && !!formik.errors.publisher}
             helperText={formik.touched.publisher && formik.errors.publisher}
-          />
-          <TextField
-            id="publishYear"
-            label={t('publishYear')}
-            variant="standard"
-            name="publishYear"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.publishYear && !!formik.errors.publishYear}
-            helperText={formik.touched.publishYear && formik.errors.publishYear}
           />
           <TextField
             id="availableCopies"
@@ -149,12 +129,12 @@ export default function BookAdd() {
           />
           <Button
             variant="contained"
-            startIcon={<AddIcon />}
+            startIcon={<UpdateIcon />}
             type="submit"
-            form="bookAdd"
-            disabled={!(formik.isValid && formik.dirty)}
+            form="bookUpdate"
+            disabled={!(formik.isValid || formik.dirty)}
           >
-            {t('add')}
+            {t('update')}
           </Button>
         </form>
       )}

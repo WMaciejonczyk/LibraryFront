@@ -24,7 +24,6 @@ export default function ReviewList() {
 
   useEffect(() => {
     apiClient.getAllReviews().then((response) => {
-      console.log(response.data);
       setReviews(response.data);
     });
   }, [apiClient]);

@@ -31,3 +31,11 @@ export class RequestBookDetailsDto {
   description!: string;
   coverImageURL!: string;
 }
+
+export class BookUpdateDto {
+  id!: number;
+  isbn: number | undefined;
+  title: string | undefined;
+  publisher: string | undefined;
+  availableCopies: number | undefined;
+}

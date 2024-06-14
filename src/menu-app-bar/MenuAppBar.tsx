@@ -14,18 +14,31 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
+import { Gb, Pl } from 'react-flags-select';
 
 function MenuAppBar() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(
+    null,
+  );
+  const [accountAnchorEl, setAccountAnchorEl] =
+    React.useState<null | HTMLElement>(null);
 
   const { t } = useTranslation();
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMenuAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleAccountOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAccountAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+  };
+
+  const handleAccountClose = () => {
+    setAccountAnchorEl(null);
   };
 
   const navigate = useNavigate();
@@ -33,15 +46,142 @@ function MenuAppBar() {
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          sx={{ mr: 2 }}
-        >
-          <MenuIcon />
-        </IconButton>
+        <Box>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            aria-controls="menu-buttons-appbar"
+            aria-haspopup="true"
+            onClick={handleMenuOpen}
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Menu
+            id="menu-buttons-appbar"
+            anchorEl={menuAnchorEl}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            keepMounted
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            open={Boolean(menuAnchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/booklist');
+                handleMenuClose();
+              }}
+            >
+              {t('bookList')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/bookdetailslist');
+                handleMenuClose();
+              }}
+            >
+              {t('bookDetailsList')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/rentallist');
+                handleMenuClose();
+              }}
+            >
+              {t('rentalList')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/reviewlist');
+                handleMenuClose();
+              }}
+            >
+              {t('reviewList')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/bookadd');
+                handleMenuClose();
+              }}
+            >
+              {t('addBook')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/bookdetailsadd');
+                handleMenuClose();
+              }}
+            >
+              {t('addBookDetails')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/bookupdate');
+                handleMenuClose();
+              }}
+            >
+              {t('updateBook')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/bookdelete');
+                handleMenuClose();
+              }}
+            >
+              {t('deleteBook')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/rentaladd');
+                handleMenuClose();
+              }}
+            >
+              {t('addRental')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/rentalend');
+                handleMenuClose();
+              }}
+            >
+              {t('endRental')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/reviewadd');
+                handleMenuClose();
+              }}
+            >
+              {t('addReview')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/useradd');
+                handleMenuClose();
+              }}
+            >
+              {t('addUser')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/userupdate');
+                handleMenuClose();
+              }}
+            >
+              {t('updateUser')}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/homepage/userdelete');
+                handleMenuClose();
+              }}
+            >
+              {t('deleteUser')}
+            </MenuItem>
+          </Menu>
+        </Box>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           {t('library')}
         </Typography>
@@ -50,14 +190,20 @@ function MenuAppBar() {
           sx={{ m: 1 }}
           onClick={() => i18n.changeLanguage('en')}
         >
-          English (en)
+          English{' '}
+          <Box sx={{ ml: 1 }}>
+            <Gb />
+          </Box>
         </Button>
         <Button
           variant="contained"
           sx={{ m: 1 }}
           onClick={() => i18n.changeLanguage('pl')}
         >
-          Polski (pl)
+          Polski{' '}
+          <Box sx={{ ml: 1 }}>
+            <Pl />
+          </Box>
         </Button>
         <Box>
           <IconButton
@@ -66,22 +212,22 @@ function MenuAppBar() {
             aria-label="account"
             aria-controls="menu-appbar"
             aria-haspopup="true"
-            onClick={handleMenu}
+            onClick={handleAccountOpen}
             sx={{ mr: 2 }}
           >
             <AccountCircle />
           </IconButton>
           <Menu
             id="menu-appbar"
-            anchorEl={anchorEl}
+            anchorEl={accountAnchorEl}
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             keepMounted
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
+            open={Boolean(accountAnchorEl)}
+            onClose={handleAccountClose}
           >
-            <MenuItem onClick={handleClose}>{t('profile')}</MenuItem>
-            <MenuItem onClick={handleClose}>{t('account')}</MenuItem>
+            <MenuItem onClick={handleAccountClose}>{t('profile')}</MenuItem>
+            <MenuItem onClick={handleAccountClose}>{t('account')}</MenuItem>
             <MenuItem onClick={() => navigate('/login')}>
               {t('logOut')}
             </MenuItem>

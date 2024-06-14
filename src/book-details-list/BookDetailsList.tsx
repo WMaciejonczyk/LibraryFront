@@ -24,38 +24,40 @@ export default function BookDetailsList() {
   }, [apiClient]);
 
   return (
-    <TableContainer component={Paper}>
-      <Table
-        sx={{ minWidth: 650 }}
-        size="small"
-        aria-label="book details table"
-      >
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell align="right">{t('genre')}</TableCell>
-            <TableCell align="right">{t('description')}</TableCell>
-            <TableCell align="right">{t('coverImageURL')}</TableCell>
-            <TableCell align="right">{t('bookId')}</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {bookDetails?.map((bookDetail) => (
-            <TableRow
-              key={bookDetail.id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {bookDetail.id}
-              </TableCell>
-              <TableCell align="right">{bookDetail.genre}</TableCell>
-              <TableCell align="right">{bookDetail.description}</TableCell>
-              <TableCell align="right">{bookDetail.coverImageURL}</TableCell>
-              <TableCell align="right">{bookDetail.bookId}</TableCell>
+    <div className="Book-details-list">
+      <TableContainer component={Paper}>
+        <Table
+          sx={{ minWidth: 650 }}
+          size="small"
+          aria-label="book details table"
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell align="right">{t('genre')}</TableCell>
+              <TableCell align="right">{t('description')}</TableCell>
+              <TableCell align="right">{t('coverImageURL')}</TableCell>
+              <TableCell align="right">{t('bookId')}</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {bookDetails?.map((bookDetail) => (
+              <TableRow
+                key={bookDetail.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {bookDetail.id}
+                </TableCell>
+                <TableCell align="right">{bookDetail.genre}</TableCell>
+                <TableCell align="right">{bookDetail.description}</TableCell>
+                <TableCell align="right">{bookDetail.coverImageURL}</TableCell>
+                <TableCell align="right">{bookDetail.bookId}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
